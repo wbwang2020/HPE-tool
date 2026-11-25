@@ -1,0 +1,133 @@
+{
+  "schema_version": "hpe/v2",
+  "paper_id": "2b922c71a12e2195",
+  "bibliographic": {
+    "title": "Long-Tailed Image Classification under Low Labeling Budgets",
+    "authors": [
+      "Alice Zhang",
+      "Bob Li"
+    ],
+    "year": null
+  },
+  "problem": {
+    "statement": "The paper studies long-tailed image classification under low labeling budgets.",
+    "motivation": "Tail classes degrade under low labeling.",
+    "evidence": [
+      {
+        "kind": "paper",
+        "page": 1,
+        "section": "Abstract",
+        "quote": "We study long-tailed image classification under low labeling budgets."
+      }
+    ]
+  },
+  "claims": [
+    {
+      "id": "C1",
+      "statement": "A two-stage reweighting method improves tail accuracy.",
+      "type": "contribution",
+      "evidence": [
+        {
+          "kind": "paper",
+          "page": 1,
+          "section": "Abstract",
+          "quote": "We propose a two-stage reweighting method and report gains on three datasets."
+        }
+      ]
+    }
+  ],
+  "method": {
+    "overview": "A two-stage reweighting scheme.",
+    "assumptions": [
+      {
+        "statement": "The validation split matches the test distribution.",
+        "evidence": [
+          {
+            "kind": "paper",
+            "page": 4,
+            "section": "3 Method",
+            "quote": "We assume that the validation split is drawn from the same distribution as the test split."
+          }
+        ]
+      }
+    ],
+    "components": [
+      {
+        "name": "stage-2 reweighting",
+        "description": "Reweights tail classes.",
+        "evidence": []
+      }
+    ],
+    "equations": [],
+    "algorithm_steps": [],
+    "evidence": []
+  },
+  "data": {
+    "sources": [
+      "three datasets"
+    ],
+    "sample_size": "not reported",
+    "splits": [],
+    "preprocessing": [],
+    "availability": "not reported",
+    "evidence": []
+  },
+  "experiments": {
+    "baselines": [
+      "A",
+      "B"
+    ],
+    "ablations": [],
+    "metrics": [
+      "accuracy"
+    ],
+    "settings": [],
+    "compute": "not reported",
+    "evidence": [
+      {
+        "kind": "paper",
+        "page": 6,
+        "section": "4 Experiments",
+        "quote": "We compare against A and B under our default training budget."
+      }
+    ]
+  },
+  "results": {
+    "findings": [
+      "Tail accuracy improves."
+    ],
+    "numbers": [
+      {
+        "name": "Dataset 1 accuracy",
+        "value": "82.1",
+        "page": 6,
+        "extracted_from": "table_text",
+        "evidence": []
+      }
+    ],
+    "evidence": []
+  },
+  "limitations": {
+    "authors_stated": [],
+    "evidence": []
+  },
+  "figures_tables": [
+    {
+      "id": "Table 1",
+      "page": 6,
+      "caption": "Main results on three datasets.",
+      "content_type": "text_maybe",
+      "shows": "main results"
+    }
+  ],
+  "key_references": [],
+  "unreported": [
+    "variance",
+    "code",
+    "seeds"
+  ],
+  "not_extractable": [],
+  "extraction_confidence": 0.6,
+  "created_at": "2026-11-05T15:14:23Z",
+  "prompt_version": "2.1.0"
+}

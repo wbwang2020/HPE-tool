@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/digest.schema.json",
+  "title": "HPE Paper Digest",
+  "description": "Fact extraction only. The digest is an index; it must not contain reviewer judgments or invented table values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "paper_id",
+    "problem",
+    "claims",
+    "method",
+    "data",
+    "experiments",
+    "results",
+    "limitations",
+    "unreported",
+    "extraction_confidence"
+  ],
+  "properties": {
+    "schema_version": { "const": "hpe/v2" },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "bibliographic": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "authors": { "type": "array", "items": { "type": "string" } },
+        "year": { "type": ["integer", "null"] },
+        "venue": { "type": "string" },
+        "doi": { "type": "string" },
+        "not_reported": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "evidence"],
+      "properties": {
+        "statement": { "type": "string", "minLength": 1 },
+        "motivation": { "type": "string" },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "statement", "type", "evidence"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^C[0-9]{1,3}$" },
+          "statement": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["hypothesis", "contribution", "result"] },
+          "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overview", "assumptions", "components", "evidence"],
+      "properties": {
+        "overview": { "type": "string" },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["statement", "evidence"],
+            "properties": {
+              "statement": { "type": "string" },
+              "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+            }
+          }
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "description", "evidence"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+            }
+          }
+        },
+        "equations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "meaning", "page"],
+            "properties": {
+              "label": { "type": "string" },
+              "meaning": { "type": "string" },
+              "page": { "type": "integer", "minimum": 1 },
+              "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+            }
+          }
+        },
+        "algorithm_steps": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources", "availability", "evidence"],
+      "properties": {
+        "sources": { "type": "array", "items": { "type": "string" } },
+        "sample_size": { "type": "string" },
+        "splits": { "type": "array", "items": { "type": "string" } },
+        "preprocessing": { "type": "array", "items": { "type": "string" } },
+        "availability": { "enum": ["public", "restricted", "not reported"] },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    },
+    "experiments": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baselines", "ablations", "metrics", "settings", "evidence"],
+      "properties": {
+        "baselines": { "type": "array", "items": { "type": "string" } },
+        "ablations": { "type": "array", "items": { "type": "string" } },
+        "metrics": { "type": "array", "items": { "type": "string" } },
+        "settings": { "type": "array", "items": { "type": "string" } },
+        "compute": { "type": "string" },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["findings", "numbers", "evidence"],
+      "properties": {
+        "findings": { "type": "array", "items": { "type": "string" } },
+        "numbers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "value", "page"],
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "string" },
+              "page": { "type": "integer", "minimum": 1 },
+              "extracted_from": { "enum": ["body_text", "table_text", "caption", "unknown"], "default": "unknown" },
+              "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+            }
+          }
+        },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    },
+    "limitations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authors_stated", "evidence"],
+      "properties": {
+        "authors_stated": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    },
+    "figures_tables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "page"],
+        "properties": {
+          "id": { "type": "string" },
+          "page": { "type": "integer", "minimum": 1 },
+          "caption": { "type": "string" },
+          "content_type": { "enum": ["text", "text_maybe", "caption_only", "unknown"] },
+          "shows": { "type": "string" }
+        }
+      }
+    },
+    "key_references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["citation"],
+        "properties": {
+          "citation": { "type": "string" },
+          "context": { "type": "string" },
+          "page": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "unreported": { "type": "array", "items": { "type": "string" } },
+    "not_extractable": {
+      "type": "array",
+      "description": "Tables, figures, equations or pages that the extractor could not read. Reviewers must not invent their contents.",
+      "items": { "type": "string" }
+    },
+    "extraction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "prompt_version": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["paper", "absence", "external"] },
+        "page": { "type": "integer", "minimum": 1 },
+        "page_end": { "type": "integer", "minimum": 1 },
+        "section": { "type": "string" },
+        "quote": { "type": "string", "maxLength": 600 },
+        "note": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "paper" } }, "required": ["kind"] },
+          "then": { "required": ["page", "quote"], "properties": { "quote": { "minLength": 1 } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "absence" } }, "required": ["kind"] },
+          "then": { "required": ["page", "note"], "properties": { "note": { "minLength": 5 } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "external" } }, "required": ["kind"] },
+          "then": { "required": ["note"], "properties": { "note": { "minLength": 5 } } }
+        }
+      ]
+    }
+  }
+}

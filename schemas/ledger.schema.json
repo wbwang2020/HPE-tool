@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/ledger.schema.json",
+  "title": "HPE Issue Ledger",
+  "description": "Canonical issue ledger generated deterministically by the script. LLMs must never write this file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "paper_id",
+    "issues",
+    "summary",
+    "coverage"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "hpe/v2"
+    },
+    "paper_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generated_by": {
+      "type": "string"
+    },
+    "rounds_completed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "aliases",
+          "title",
+          "category",
+          "severity",
+          "status",
+          "raised_by",
+          "evidence",
+          "round_opened"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^I-[0-9]{3}$"
+          },
+          "aliases": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "enum": [
+              "methodology",
+              "theory",
+              "experiments",
+              "statistics",
+              "novelty",
+              "reproducibility",
+              "clarity",
+              "ethics",
+              "related_work",
+              "other"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "blocking",
+              "major",
+              "minor",
+              "question",
+              "nit"
+            ]
+          },
+          "status": {
+            "enum": [
+              "open",
+              "responded",
+              "resolved",
+              "partially_resolved",
+              "disputed",
+              "withdrawn",
+              "out_of_scope"
+            ]
+          },
+          "raised_by": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^R[0-9]{1,2}$"
+            }
+          },
+          "supported_by": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^R[0-9]{1,2}$"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "author_response_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "round_opened": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "round_closed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 5
+          },
+          "resolution_note": {
+            "type": "string"
+          },
+          "meta_note": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "flickering": {
+            "type": "boolean"
+          },
+          "merged_from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "merged_into": {
+            "type": "string",
+            "pattern": "^I-[0-9]{3}$"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blocking_open",
+        "major_open",
+        "minor_open",
+        "resolved",
+        "disputed",
+        "total"
+      ],
+      "properties": {
+        "blocking_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "major_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "minor_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "disputed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low_confidence_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "single_source_blocking": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "flickering": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewers_expected",
+        "reviewers_done",
+        "complete"
+      ],
+      "properties": {
+        "reviewers_expected": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reviewers_done": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "failed_reviewers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provisional": {
+          "type": "boolean"
+        },
+        "round": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reviewers_failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reviewers_skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped_reviewers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "paper",
+            "absence",
+            "external"
+          ]
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "page_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "section": {
+          "type": "string"
+        },
+        "quote": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

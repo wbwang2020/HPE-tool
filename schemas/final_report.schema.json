@@ -1,0 +1,441 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/final_report.schema.json",
+  "title": "HPE Final Report Bundle",
+  "description": "Final JSON report. Markdown is a rendering view of this data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "paper",
+    "decision",
+    "scores",
+    "issue_summary",
+    "artifacts",
+    "usage",
+    "warnings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "hpe/v2"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "paper_id",
+        "title",
+        "pages",
+        "sha256"
+      ],
+      "properties": {
+        "paper_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "year": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "venue": {
+          "type": "string"
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "extraction_quality": {
+          "type": "string"
+        },
+        "extraction_engine": {
+          "type": "string"
+        }
+      }
+    },
+    "profile": {
+      "type": "string"
+    },
+    "author_mode": {
+      "enum": [
+        "simulated",
+        "provided",
+        "none"
+      ]
+    },
+    "context_isolation": {
+      "enum": [
+        "fresh",
+        "shared",
+        "unknown"
+      ]
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recommendation",
+        "policy_decision",
+        "override",
+        "overall_score",
+        "confidence",
+        "provisional"
+      ],
+      "properties": {
+        "recommendation": {
+          "enum": [
+            "accept",
+            "minor_revision",
+            "major_revision",
+            "reject"
+          ]
+        },
+        "policy_decision": {
+          "enum": [
+            "accept",
+            "minor_revision",
+            "major_revision",
+            "reject"
+          ]
+        },
+        "override": {
+          "type": "boolean"
+        },
+        "override_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "overall_score": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "provisional": {
+          "type": "boolean"
+        }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mean",
+        "median",
+        "by_dimension",
+        "matrix"
+      ],
+      "properties": {
+        "mean": {
+          "type": "number"
+        },
+        "median": {
+          "type": "number"
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "by_dimension": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "matrix": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "issue_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blocking_open",
+        "major_open",
+        "minor_open",
+        "resolved",
+        "disputed",
+        "total"
+      ],
+      "properties": {
+        "blocking_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "major_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "minor_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "disputed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low_confidence_open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "single_source_blocking": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "dissent": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required_revisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "reviewers_expected": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reviewers_done": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "complete": {
+          "type": "boolean"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_dir",
+        "report_md",
+        "report_json",
+        "ledger",
+        "meta_review"
+      ],
+      "properties": {
+        "run_dir": {
+          "type": "string"
+        },
+        "report_md": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "report_json": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ledger": {
+          "type": "string"
+        },
+        "meta_review": {
+          "type": "string"
+        },
+        "prompts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "review_rounds_md": {
+          "type": ["string", "null"]
+        },
+        "final_opinion_md": {
+          "type": ["string", "null"]
+        },
+        "bilingual": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calls",
+        "tokens_in",
+        "tokens_out",
+        "cost_usd"
+      ],
+      "properties": {
+        "calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_in": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "known": {
+          "type": "boolean"
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "info",
+              "warning",
+              "error"
+            ],
+            "default": "warning"
+          }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "purpose": {
+      "enum": [
+        "review",
+        "problem_finding",
+        "summary"
+      ]
+    },
+    "material": {
+      "enum": [
+        "paper",
+        "proposal",
+        "design"
+      ]
+    },
+    "domain": {
+      "type": "string"
+    },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "domain_label": {
+      "type": "string"
+    },
+    "review_rounds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "rebuttal_rounds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "final_opinion": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "output_language": {
+      "enum": ["zh", "en"]
+    },
+    "agent": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "backend_consistency": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "vision": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    }
+  }
+}

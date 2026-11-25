@@ -1,0 +1,6 @@
+interface:
+  display_name: "HPE Paper Evaluator v3.1"
+  short_description: "Evidence-anchored multi-reviewer review and summary for local PDFs"
+  default_prompt: "Use $hpe-paper-evaluator-v2 to review the attached PDF with the HPE evidence-anchored protocol."
+policy:
+  allow_implicit_invocation: true

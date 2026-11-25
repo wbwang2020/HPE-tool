@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/paper_manifest.schema.json",
+  "title": "HPE Paper Manifest",
+  "description": "Deterministic PDF ingestion result. All page numbers are physical PDF pages, starting at 1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "paper_id", "source", "extraction", "sections"],
+  "properties": {
+    "schema_version": { "const": "hpe/v2" },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "pages"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "pages": { "type": "integer", "minimum": 1 },
+        "printed_page_offset": { "type": "integer" }
+      }
+    },
+    "title": { "type": "string" },
+    "authors": { "type": "array", "items": { "type": "string" } },
+    "year": { "type": ["integer", "null"] },
+    "language": { "type": "string" },
+    "blind": { "type": "boolean" },
+    "extraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine", "quality", "chars"],
+      "properties": {
+        "engine": { "enum": ["pymupdf", "pdfplumber", "pypdf", "pdftotext", "ocr"] },
+        "engine_version": { "type": ["string", "null"] },
+        "quality": { "enum": ["good", "partial", "poor"] },
+        "chars": { "type": "integer", "minimum": 0 },
+        "chars_per_page": { "type": "number", "minimum": 0 },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "ocr_used": { "type": "boolean" },
+        "page_texts_path": { "type": "string" },
+        "sectionizer_version": { "type": "string" },
+        "quality_details": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "page_start", "page_end", "char_start", "char_end", "text_path"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S[0-9]{2,3}$" },
+          "kind": {
+            "enum": ["abstract", "introduction", "related_work", "method", "theory", "experiments", "results", "discussion", "conclusion", "references", "appendix", "other"]
+          },
+          "heading": { "type": "string" },
+          "page_start": { "type": "integer", "minimum": 1 },
+          "page_end": { "type": "integer", "minimum": 1 },
+          "char_start": { "type": "integer", "minimum": 0 },
+          "char_end": { "type": "integer", "minimum": 0 },
+          "tokens_est": { "type": "integer", "minimum": 0 },
+          "text_path": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "figures": { "type": "array", "items": { "$ref": "#/$defs/figure" } },
+    "tables": { "type": "array", "items": { "$ref": "#/$defs/figure" } },
+    "vision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["off", "auto", "all"] },
+        "dpi": { "type": "integer", "minimum": 72, "maximum": 300 },
+        "max_pages": { "type": "integer", "minimum": 1, "maximum": 200 },
+        "page_images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["page", "path"],
+            "properties": {
+              "page": { "type": "integer", "minimum": 1 },
+              "path": { "type": "string", "minLength": 1 },
+              "dpi": { "type": "integer", "minimum": 72 },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "references_count": { "type": "integer", "minimum": 0 },
+    "digest_path": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "figure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "page"],
+      "properties": {
+        "id": { "type": "string" },
+        "page": { "type": "integer", "minimum": 1 },
+        "caption": { "type": "string" },
+        "content_type": { "enum": ["text", "text_maybe", "caption_only", "unknown"] },
+        "section_id": { "type": "string" }
+      }
+    }
+  }
+}

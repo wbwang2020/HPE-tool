@@ -1,0 +1,31 @@
+# Codex CLI workflow example for HPE v3.1.
+# Codex reads `agents/openai.yaml` for UI metadata; this file is a host-workflow
+# example, not a Codex manifest. Keep the skill directory as the CLI cwd.
+
+default_output:
+  # Host-neutral contract: run dir next to the reviewed PDF.
+  run_dir: "{pdf_dir}/{pdf_stem}.hpe"
+  material: "debate/review/summary outputs are relative to this run dir"
+
+workflow:
+  init: >-
+    python scripts/hpe.py init --pdf {pdf} --purpose {purpose}
+    --material {material} --domain {domain} --profile {profile}
+    --reviewers {reviewers} --rounds {rounds} --language {language}
+    --mode host --isolation subagent --vision-pages auto --json
+  next: "python scripts/hpe.py next --run {run_dir} --executor host --limit {limit} --json"
+  submit: "python scripts/hpe.py submit --run {run_dir} --task {task_id} --file {output_path} --json"
+  fail: "python scripts/hpe.py fail --run {run_dir} --task {task_id} --reason {reason} --json"
+  advance: "python scripts/hpe.py advance --run {run_dir} --json"
+  render: "python scripts/hpe.py render --run {run_dir} --format md,json --json"
+
+host_contract:
+  fresh_context_per_task: true
+  read_prompt_verbatim: true
+  only_host_calls_submit: true
+  only_host_calls_advance: true
+  one_json_object_per_task: true
+  # Codex has no OpenCode-style subagent tool. Use a separate `codex exec`
+  # process/session per task, or serialize with --isolation session.
+  task_runner: "codex exec --sandbox workspace-write --add-dir {pdf_dir} ..."
+  do_not_edit_run_state: true

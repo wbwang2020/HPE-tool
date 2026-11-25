@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/summary_report.schema.json",
+  "title": "HPE Detailed Summary Report",
+  "description": "Structured detailed summary for a paper, research proposal, or project/experiment design.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "paper_id",
+    "purpose",
+    "material",
+    "domain",
+    "title",
+    "summary_markdown",
+    "highlights",
+    "open_questions",
+    "missing_information",
+    "limitations",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": { "const": "hpe/v2" },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "purpose": { "const": "summary" },
+    "material": { "enum": ["paper", "proposal", "design"] },
+    "domain": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "summary_markdown": { "type": "string", "minLength": 200 },
+    "highlights": {
+      "type": "array",
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/highlight" }
+    },
+    "open_questions": { "type": "array", "items": { "type": "string" } },
+    "missing_information": { "type": "array", "items": { "type": "string" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "images_read": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1 }
+    },
+    "prompt_version": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "highlight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "claim"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^H[0-9]{1,3}$" },
+        "kind": { "enum": ["innovation", "technical", "significance", "methodological"] },
+        "claim": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+        "why_it_matters": { "type": "string" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["paper", "absence", "external"] },
+        "page": { "type": "integer", "minimum": 1 },
+        "page_end": { "type": "integer", "minimum": 1 },
+        "section": { "type": "string" },
+        "quote": { "type": "string", "maxLength": 600 },
+        "note": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "paper" } }, "required": ["kind"] },
+          "then": { "required": ["page", "quote"], "properties": { "quote": { "minLength": 1 } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "absence" } }, "required": ["kind"] },
+          "then": { "required": ["page", "note"], "properties": { "note": { "minLength": 5 } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "external" } }, "required": ["kind"] },
+          "then": { "required": ["note"], "properties": { "note": { "minLength": 5 } } }
+        }
+      ]
+    }
+  }
+}

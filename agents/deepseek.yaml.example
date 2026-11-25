@@ -1,0 +1,53 @@
+# DeepSeek Harness / OpenCode adapter example.
+# Field names vary by host; adjust to the host's manifest schema. The important
+# part is the workflow and the fresh-context rule, not this exact YAML.
+# Always pass an absolute PDF path so the default run dir is created next to it.
+
+interface:
+  display_name: "HPE Paper Evaluator v3"
+  short_description: "Evidence-anchored multi-reviewer paper review with structured ledger"
+  default_prompt: "Use $hpe-paper-evaluator-v2 to review the attached PDF with the HPE v3 protocol."
+
+runtime:
+  entry: "scripts/hpe.py"
+  python: ">=3.10"
+  default_mode: "host"
+  requires_api_key: false
+  supports_api_mode: true
+
+default_output:
+  # Host-neutral contract: run dir next to the reviewed PDF.
+  run_dir: "{pdf_dir}/{pdf_stem}.hpe"
+  material: "debate/review/summary outputs are relative to this run dir"
+
+workflow:
+  init: >-
+    python scripts/hpe.py init --pdf {pdf} --purpose {purpose}
+    --material {material} --domain {domain} --mode host --profile conference
+    --reviewers methodology,experiments,novelty --rounds 2 --language {language}
+    --isolation subagent --vision-pages auto --json
+  next: "python scripts/hpe.py next --run {run_dir} --executor host --json --limit {limit}"
+  submit: "python scripts/hpe.py submit --run {run_dir} --task {task_id} --file {output_path}"
+  fail: "python scripts/hpe.py fail --run {run_dir} --task {task_id} --reason {reason}"
+  advance: "python scripts/hpe.py advance --run {run_dir}"
+  render: "python scripts/hpe.py render --run {run_dir} --format md,json"
+
+host_contract:
+  fresh_context_per_task: true
+  parallel_tasks: optional
+  max_concurrent_tasks: 4
+  read_prompt_verbatim: true
+  only_host_calls_submit: true
+  only_host_calls_advance: true
+  isolation_setting: "subagent"
+
+credentials:
+  # Host mode needs no API key. For --mode api, put keys in the independent
+  # llm_apis.json file (chmod 600); environment fallbacks are optional.
+  # The review base defaults to the host-agent model. Set DEEPSEEK_HARNESS_MODEL
+  # or HPE_AGENT_BACKEND if the Harness does not expose it; a same-vendor/
+  # different-model role default is refused unless --allow-backend-mismatch.
+  llm_config: "~/.hpe-paper-evaluator/llm_apis.json"
+  providers: [qwen, glm, kimi, deepseek]
+  never_log_values: true
+  never_pass_on_command_line: true

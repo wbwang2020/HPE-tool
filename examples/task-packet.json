@@ -1,0 +1,47 @@
+{
+  "schema_version": "hpe/v2",
+  "task_id": "T-0007",
+  "run_id": "20261105-120000-a1b2c3",
+  "kind": "reviewer_report",
+  "stage": "review",
+  "round": 0,
+  "actor": {
+    "id": "R2",
+    "persona": "experiments",
+    "label": "Reviewer B",
+    "model_hint": "deepseek-chat"
+  },
+  "prompt_path": "prompts/T-0007.prompt.md",
+  "prompt_sha256": "8f14e45fceea167a5a36dedd4bea2543f0e6f4c1b2d3a4e5f60718293a4b5c6d",
+  "schema_path": "schemas/review.schema.json",
+  "output_path": "artifacts/reviews/R2.round0.review.json",
+  "depends_on": [
+    "T-0001"
+  ],
+  "constraints": {
+    "max_input_tokens": 60000,
+    "max_output_tokens": 8000,
+    "temperature": 0.3,
+    "language": "zh",
+    "json_only": true,
+    "executor": "host"
+  },
+  "context": {
+    "sections": [
+      "S01",
+      "S03",
+      "S04",
+      "S05",
+      "S06"
+    ],
+    "digest": "digest/digest.json",
+    "prior_reviews": [],
+    "rebuttal": null,
+    "truncated": false,
+    "omitted_sections": []
+  },
+  "context_isolation": "fresh",
+  "prompt_set": "2.1.0",
+  "optional_depends_on": [],
+  "prompt_json_path": "prompts/T-0007.prompt.json"
+}

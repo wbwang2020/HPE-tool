@@ -1,0 +1,168 @@
+{
+  "schema_version": "hpe/v2",
+  "paper_id": "2025-longtail-lowlabel",
+  "editor_id": "E1",
+  "decision": "major_revision",
+  "policy_decision": "major_revision",
+  "override": false,
+  "override_reason": null,
+  "overall_score": 5.1,
+  "score_summary": {
+    "mean": 5.0,
+    "median": 5.0,
+    "min": 4.0,
+    "max": 6.0,
+    "by_dimension": {
+      "novelty": 5.3,
+      "technical_soundness": 5.0,
+      "evidence_strength": 4.3,
+      "reproducibility": 4.5,
+      "clarity": 6.0,
+      "significance": 5.2
+    }
+  },
+  "score_matrix": [
+    {
+      "reviewer_id": "R1",
+      "overall": 5.0,
+      "recommendation": "major_revision"
+    },
+    {
+      "reviewer_id": "R2",
+      "overall": 5.0,
+      "recommendation": "major_revision"
+    },
+    {
+      "reviewer_id": "R3",
+      "overall": 6.0,
+      "recommendation": "minor_revision"
+    },
+    {
+      "reviewer_id": "R4",
+      "overall": 4.0,
+      "recommendation": "major_revision"
+    }
+  ],
+  "issue_resolution": [
+    {
+      "issue_id": "I-001",
+      "final_status": "partially_resolved",
+      "merged_from": ["R1-I2", "R2-I1", "R3-I1"],
+      "rationale": "作者补充了 FLOPs 与参数量，但未补充与 X 的同算力基线；核心可比性问题仍在。",
+      "evidence": [
+        {
+          "kind": "paper",
+          "page": 8,
+          "section": "4.2 Main results",
+          "quote": "We compare against A and B under our default training budget."
+        }
+      ]
+    },
+    {
+      "issue_id": "I-002",
+      "final_status": "open",
+      "merged_from": ["R1-I1", "R2-I2", "R3-I2"],
+      "rationale": "作者承认缺少 stage-2 消融，并承诺在修订版补充；当前版本仍未提供，不能标 resolved。",
+      "evidence": [
+        {
+          "kind": "absence",
+          "page": 9,
+          "page_end": 10,
+          "section": "4.3 Ablation",
+          "quote": "",
+          "note": "检查第 9–10 页 Table 3 与正文，未找到 stage-2 reweighting 的单独消融。"
+        }
+      ]
+    },
+    {
+      "issue_id": "I-003",
+      "final_status": "disputed",
+      "merged_from": ["R1-I4", "R4-I2"],
+      "rationale": "R1 认为缺失方差报告是 minor，R4 认为在长尾小样本下足以影响结论；作者只给了一次运行结果，无法裁决，保留分歧。",
+      "evidence": [
+        {
+          "kind": "paper",
+          "page": 8,
+          "section": "4.2",
+          "quote": "We report the best result over the default training run."
+        }
+      ]
+    },
+    {
+      "issue_id": "I-004",
+      "final_status": "resolved",
+      "merged_from": ["R2-I3", "R3-I3"],
+      "rationale": "作者在答辩中给出了第 5 页的划分协议，并说明超参数只在验证集选择；R2/R3 复核后接受。",
+      "evidence": [
+        {
+          "kind": "paper",
+          "page": 5,
+          "section": "3.1 Data",
+          "quote": "We split each dataset into training, validation, and test sets by class ratio."
+        }
+      ]
+    }
+  ],
+  "consensus": [
+    "问题设置具有实际意义，方法实现开销可控。",
+    "主实验缺少与最强基线的同算力比较，是当前版本的核心缺陷。",
+    "需要补充 stage-2 reweighting 的单独消融。"
+  ],
+  "contested": [
+    {
+      "issue_id": "I-003",
+      "positions": [
+        {
+          "reviewer_id": "R1",
+          "view": "minor：补 3 个种子的均值/方差即可",
+          "reason": "主要结论的趋势在三个数据集上一致，方差不太可能改变方向。"
+        },
+        {
+          "reviewer_id": "R4",
+          "view": "major：长尾类别样本少，单次运行不足以支持显著性声明",
+          "reason": "尾部类别测试样本可能只有几十个，单次运行的波动足以覆盖报告提升。"
+        }
+      ],
+      "editor_rationale": "双方都有道理；当前论文只报告 best run，无法判断波动。将其标为 disputed，要求修订版至少报告 3 个种子的均值与标准差，但不单独作为 reject 依据。"
+    }
+  ],
+  "dissent": [
+    {
+      "reviewer_id": "R3",
+      "summary": "认为方法新颖性明确、实验趋势一致，补充方差后可达 minor revision；不认为缺少同算力基线足以阻止接收。",
+      "severity": "medium"
+    }
+  ],
+  "required_revisions": [
+    {
+      "issue_id": "I-001",
+      "action": "补充与 X 的同 FLOPs/同训练轮数比较，或给出不可比说明与参数量/算力表。",
+      "priority": "must"
+    },
+    {
+      "issue_id": "I-002",
+      "action": "增加 w/o stage-2 reweighting 与 stage-2 only 消融，并在相同训练预算下报告。",
+      "priority": "must"
+    },
+    {
+      "issue_id": "I-003",
+      "action": "报告至少 3 个随机种子的均值与标准差；对核心比较给出效应量或检验结果。",
+      "priority": "should"
+    }
+  ],
+  "optional_suggestions": [
+    "补充失败案例分析，尤其是尾部类别极少的类别。",
+    "说明第二阶段重加权的超参数搜索空间与选择协议。",
+    "在附录给出训练算力与推理延迟。"
+  ],
+  "confidence": 0.76,
+  "limitations": [
+    "本次审稿基于 PDF 提取文本，图表中的细小数字可能未被完整读取。",
+    "未获取作者代码与数据，无法独立复现。"
+  ],
+  "prompt_version": "2.0.0",
+  "model": {
+    "provider": "deepseek",
+    "name": "deepseek-chat"
+  }
+}

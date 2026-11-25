@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/task_packet.schema.json",
+  "title": "HPE Host Task Packet",
+  "description": "A self-contained unit of work for the host agent or one fresh subagent. Paths are relative to the run directory.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "run_id",
+    "kind",
+    "stage",
+    "actor",
+    "prompt_path",
+    "prompt_sha256",
+    "schema_path",
+    "output_path",
+    "depends_on",
+    "constraints",
+    "context_isolation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "hpe/v2"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^T-[0-9]{4}$"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "digest",
+        "reviewer_report",
+        "author_rebuttal",
+        "meta_review",
+        "summary_report",
+        "legacy_summary"
+      ]
+    },
+    "stage": {
+      "enum": [
+        "digest",
+        "review",
+        "rebuttal",
+        "update",
+        "meta",
+        "summary",
+        "summary_review"
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "persona",
+        "label"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "persona": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "model_hint": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "prompt_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt_json_path": {
+      "type": "string"
+    },
+    "prompt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "prompt_set": {
+      "type": "string"
+    },
+    "schema_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^T-[0-9]{4}$"
+      }
+    },
+    "optional_depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^T-[0-9]{4}$"
+      }
+    },
+    "context_isolation": {
+      "enum": [
+        "fresh",
+        "shared"
+      ]
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_output_tokens",
+        "temperature",
+        "json_only"
+      ],
+      "properties": {
+        "max_input_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "language": {
+          "type": "string"
+        },
+        "json_only": {
+          "type": "boolean"
+        },
+        "executor": {
+          "enum": [
+            "host",
+            "api"
+          ],
+          "default": "host"
+        },
+        "backend": {
+          "type": "string"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "paper_manifest": {
+          "type": "string"
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "omitted_sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "digest": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prior_reviews": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "other_reviews": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rebuttal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ledger": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_report": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "material": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "page_images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "vision": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "purpose": {
+      "enum": [
+        "review",
+        "problem_finding",
+        "summary"
+      ]
+    },
+    "material": {
+      "enum": [
+        "paper",
+        "proposal",
+        "design"
+      ]
+    },
+    "domain": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/meta_review.schema.json",
+  "title": "HPE Meta Review",
+  "description": "Editor/meta-review decision. policy_decision is computed by the script from the canonical ledger; decision may override only with a reason.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "paper_id",
+    "editor_id",
+    "decision",
+    "policy_decision",
+    "override",
+    "overall_score",
+    "score_summary",
+    "score_matrix",
+    "issue_resolution",
+    "consensus",
+    "contested",
+    "dissent",
+    "required_revisions",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": { "const": "hpe/v2" },
+    "paper_id": { "type": "string", "minLength": 1 },
+    "editor_id": { "type": "string", "pattern": "^E[0-9]{1,2}$" },
+    "decision": { "enum": ["accept", "minor_revision", "major_revision", "reject"] },
+    "policy_decision": { "enum": ["accept", "minor_revision", "major_revision", "reject"] },
+    "decision_provisional": { "type": "boolean" },
+    "override": { "type": "boolean" },
+    "override_reason": { "type": ["string", "null"] },
+    "overall_score": { "type": "number", "minimum": 1, "maximum": 10 },
+    "score_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean", "median", "min", "max", "by_dimension"],
+      "properties": {
+        "mean": { "type": "number", "minimum": 1, "maximum": 10 },
+        "median": { "type": "number", "minimum": 1, "maximum": 10 },
+        "min": { "type": "number", "minimum": 1, "maximum": 10 },
+        "max": { "type": "number", "minimum": 1, "maximum": 10 },
+        "by_dimension": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["novelty", "technical_soundness", "evidence_strength", "reproducibility", "clarity", "significance"],
+          "properties": {
+            "novelty": { "type": "number", "minimum": 1, "maximum": 10 },
+            "technical_soundness": { "type": "number", "minimum": 1, "maximum": 10 },
+            "evidence_strength": { "type": "number", "minimum": 1, "maximum": 10 },
+            "reproducibility": { "type": "number", "minimum": 1, "maximum": 10 },
+            "clarity": { "type": "number", "minimum": 1, "maximum": 10 },
+            "significance": { "type": "number", "minimum": 1, "maximum": 10 }
+          }
+        }
+      }
+    },
+    "score_matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reviewer_id", "overall", "recommendation"],
+        "properties": {
+          "reviewer_id": { "type": "string", "pattern": "^R[0-9]{1,2}$" },
+          "overall": { "type": "number", "minimum": 1, "maximum": 10 },
+          "recommendation": { "enum": ["accept", "minor_revision", "major_revision", "reject"] }
+        }
+      }
+    },
+    "issue_resolution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["issue_id", "final_status", "rationale"],
+        "properties": {
+          "issue_id": { "type": "string", "pattern": "^I-[0-9]{3}$" },
+          "final_status": { "enum": ["resolved", "partially_resolved", "disputed", "open", "out_of_scope"] },
+          "merged_from": { "type": "array", "items": { "type": "string" } },
+          "rationale": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+        }
+      }
+    },
+    "consensus": { "type": "array", "items": { "type": "string" } },
+    "contested": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["issue_id", "positions", "editor_rationale"],
+        "properties": {
+          "issue_id": { "type": "string" },
+          "positions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["reviewer_id", "view", "reason"],
+              "properties": {
+                "reviewer_id": { "type": "string" },
+                "view": { "type": "string" },
+                "reason": { "type": "string" }
+              }
+            }
+          },
+          "editor_rationale": { "type": "string" }
+        }
+      }
+    },
+    "dissent": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reviewer_id", "summary", "severity"],
+        "properties": {
+          "reviewer_id": { "type": "string", "pattern": "^R[0-9]{1,2}$" },
+          "summary": { "type": "string" },
+          "severity": { "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+    "required_revisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["issue_id", "action", "priority"],
+        "properties": {
+          "issue_id": { "type": "string", "pattern": "^I-[0-9]{3}$" },
+          "action": { "type": "string", "minLength": 1 },
+          "priority": { "enum": ["must", "should"] }
+        }
+      }
+    },
+    "optional_suggestions": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reviewers_expected": { "type": "integer", "minimum": 1 },
+        "reviewers_done": { "type": "integer", "minimum": 0 },
+        "complete": { "type": "boolean" },
+        "provisional": { "type": "boolean" }
+      }
+    },
+    "evidence_verification": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "prompt_version": { "type": "string" },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "override": { "const": true } },
+        "required": ["override"]
+      },
+      "then": {
+        "required": ["override_reason"],
+        "properties": { "override_reason": { "type": "string", "minLength": 10 } }
+      }
+    }
+  ],
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["paper", "absence", "external"] },
+        "page": { "type": "integer", "minimum": 1 },
+        "page_end": { "type": "integer", "minimum": 1 },
+        "section": { "type": "string" },
+        "quote": { "type": "string", "maxLength": 600 },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

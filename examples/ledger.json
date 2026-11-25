@@ -1,0 +1,109 @@
+{
+  "schema_version": "hpe/v2",
+  "paper_id": "2b922c71a12e2195",
+  "generated_at": "2026-11-05T15:19:21Z",
+  "generated_by": "hpe.ledger+meta",
+  "rounds_completed": 1,
+  "issues": [
+    {
+      "id": "I-001",
+      "aliases": [
+        "R1-I1",
+        "R2-I1",
+        "R3-I1"
+      ],
+      "title": "Main experiments lack a matched-compute comparison with the strongest baseline",
+      "category": "experiments",
+      "severity": "major",
+      "status": "partially_resolved",
+      "raised_by": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "supported_by": [],
+      "evidence": [
+        {
+          "kind": "paper",
+          "page": 6,
+          "section": "4 Experiments",
+          "quote": "We compare against A and B under our default training budget."
+        },
+        {
+          "kind": "absence",
+          "page": 8,
+          "page_end": 9,
+          "section": "4 Experiments",
+          "note": "Checked pages 8-9 and Table 1; no matched-compute comparison or FLOPs table was found."
+        }
+      ],
+      "author_response_ids": [
+        "A1-I-001"
+      ],
+      "round_opened": 0,
+      "round_closed": null,
+      "confidence": 0.82,
+      "flickering": false,
+      "resolution_note": "The author accepts the gap and plans a matched-FLOPs comparison, but the current paper still lacks it.",
+      "meta_note": "The author accepts the missing matched-compute comparison and promises it in the revision, but the current paper still lacks it. The issue stays open for the current version."
+    },
+    {
+      "id": "I-002",
+      "aliases": [
+        "R1-I2",
+        "R2-I2",
+        "R3-I2"
+      ],
+      "title": "Variance, seeds and significance are not reported",
+      "category": "statistics",
+      "severity": "minor",
+      "status": "partially_resolved",
+      "raised_by": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "supported_by": [],
+      "evidence": [
+        {
+          "kind": "absence",
+          "page": 8,
+          "page_end": 9,
+          "section": "4 Experiments",
+          "note": "Checked pages 8-9, Table 1 and the surrounding text; no std, confidence interval, seed count or p-value was found."
+        }
+      ],
+      "author_response_ids": [
+        "A1-I-002"
+      ],
+      "round_opened": 0,
+      "round_closed": null,
+      "confidence": 0.9,
+      "flickering": false,
+      "resolution_note": "The author accepts the point and plans three seeds with variance, but no variance is reported in the current paper.",
+      "meta_note": "The author accepts the variance gap and promises three seeds with standard deviation in the revision; the current paper still reports point estimates only."
+    }
+  ],
+  "summary": {
+    "blocking_open": 0,
+    "major_open": 1,
+    "minor_open": 1,
+    "resolved": 0,
+    "disputed": 0,
+    "total": 2,
+    "low_confidence_open": 0,
+    "single_source_blocking": 0,
+    "flickering": 0
+  },
+  "coverage": {
+    "round": 1,
+    "reviewers_expected": 3,
+    "reviewers_done": 3,
+    "reviewers_failed": 0,
+    "reviewers_skipped": 0,
+    "complete": true,
+    "ratio": 1.0,
+    "failed_reviewers": [],
+    "skipped_reviewers": []
+  }
+}

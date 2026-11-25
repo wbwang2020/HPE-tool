@@ -1,0 +1,45 @@
+{
+  "schema_version": "hpe/v2",
+  "paper_id": "2b922c71a12e2195",
+  "author_id": "A1",
+  "round": 1,
+  "responses": [
+    {
+      "response_id": "A1-I-001",
+      "issue_id": "I-001",
+      "status": "accept",
+      "response": "We agree that the current Table 1 compares only A and B under our default budget. The revision will add a matched-FLOPs comparison with the strongest baseline, or a full compute table explaining why the comparison is not possible.",
+      "paper_evidence": [],
+      "revision_plan": "Add a matched-FLOPs baseline and a compute table in Section 4.2.",
+      "confidence": 0.9
+    },
+    {
+      "response_id": "A1-I-002",
+      "issue_id": "I-002",
+      "status": "accept",
+      "response": "We agree that the main table reports point estimates only. The revision will report three seeds with mean and standard deviation and a paired test for the core comparison.",
+      "paper_evidence": [],
+      "revision_plan": "Report mean/std over three seeds and a paired test in Table 1.",
+      "confidence": 0.9
+    }
+  ],
+  "global_clarifications": [],
+  "new_claims": [],
+  "revision_plan": [
+    {
+      "issue_id": "I-001",
+      "action": "Add a matched-FLOPs baseline and compute table.",
+      "location": "Section 4.2 / Table 1",
+      "effort": "medium"
+    },
+    {
+      "issue_id": "I-002",
+      "action": "Report three seeds with mean/std and a paired test.",
+      "location": "Section 4.2 / Table 1",
+      "effort": "small"
+    }
+  ],
+  "unresolved": [],
+  "prompt_version": "2.1.0",
+  "created_at": "2026-11-05T15:17:04Z"
+}

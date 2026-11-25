@@ -1,0 +1,59 @@
+# OpenCode adapter example for HPE v3.
+# Field names vary by OpenCode version; the workflow and host contract are the
+# stable part. Point the agent at this skill directory and keep the CLI cwd there.
+# Always pass an absolute PDF path so the default run dir is created next to it.
+
+interface:
+  display_name: "HPE Paper Evaluator v3"
+  short_description: "Evidence-anchored multi-reviewer review, detailed summary, or problem finding"
+  default_prompt: "Use this skill to review, summarize, or find loopholes in the attached PDF. Start with `python scripts/hpe.py init ... --json`."
+
+agent:
+  mode: "primary"
+  tools:
+    bash: true
+    read: true
+    write: true
+    edit: false
+    task: true
+  permission:
+    bash:
+      "python scripts/hpe.py *": "allow"
+      "*": "ask"
+
+default_output:
+  # Host-neutral contract: the run directory lives next to the reviewed PDF.
+  # Do not pass --out unless the user explicitly asks for another location.
+  run_dir: "{pdf_dir}/{pdf_stem}.hpe"
+  material: "debate/review/summary outputs are relative to this run dir"
+
+workflow:
+  init: >-
+    python scripts/hpe.py init --pdf {pdf} --purpose {purpose}
+    --material {material} --domain {domain} --profile {profile}
+    --reviewers {reviewers} --rounds {rounds} --language {language}
+    --mode host --isolation subagent --vision-pages auto --json
+  next: "python scripts/hpe.py next --run {run_dir} --executor host --limit {limit} --json"
+  submit: "python scripts/hpe.py submit --run {run_dir} --task {task_id} --file {output_path} --json"
+  fail: "python scripts/hpe.py fail --run {run_dir} --task {task_id} --reason {reason} --json"
+  advance: "python scripts/hpe.py advance --run {run_dir} --json"
+  render: "python scripts/hpe.py render --run {run_dir} --format md,json --json"
+
+host_contract:
+  fresh_context_per_task: true
+  read_prompt_verbatim: true
+  only_host_calls_submit: true
+  only_host_calls_advance: true
+  one_json_object_per_task: true
+  do_not_edit_run_state: true
+  parallel_tasks: "optional; keep each task in its own session/subagent"
+  max_concurrent_tasks: 4
+
+# For external APIs use --mode api and an independent key file:
+#   python scripts/hpe.py init-llm-config
+#   python scripts/hpe.py run --pdf ... --out ... --mode api --purpose review \
+#     --agent-backend provider:model
+# Keys are read from ~/.hpe-paper-evaluator/llm_apis.json or --llm-config;
+# they are never passed on the command line or written into reports.
+# API role defaults inherit the agent model. A same-vendor/different-model
+# default is refused unless --allow-backend-mismatch is explicit.

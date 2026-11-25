@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hpe.local/schemas/v2/run_request.schema.json",
+  "title": "HPE Run Request",
+  "description": "Input contract for one HPE v2 run. Never contains API keys.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "paper",
+    "profile",
+    "mode",
+    "reviewers",
+    "rounds",
+    "output"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "hpe/v2"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{3,80}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "language": {
+          "enum": [
+            "auto",
+            "zh",
+            "en",
+            "other"
+          ]
+        }
+      }
+    },
+    "profile": {
+      "enum": [
+        "paper",
+        "conference",
+        "journal",
+        "proposal",
+        "experiment"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "host",
+        "api",
+        "hybrid",
+        "legacy"
+      ]
+    },
+    "reviewers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "persona"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^R[0-9]{1,2}$"
+          },
+          "persona": {
+            "enum": [
+              "methodology",
+              "experiments",
+              "novelty",
+              "reproducibility",
+              "devils_advocate",
+              "practitioner"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^A[0-9]{1,2}$",
+          "default": "A1"
+        },
+        "mode": {
+          "enum": [
+            "simulated",
+            "provided",
+            "none"
+          ],
+          "default": "simulated"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "rebuttal_file": {
+          "type": "string"
+        }
+      }
+    },
+    "rounds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "language": {
+      "enum": [
+        "auto",
+        "zh",
+        "en"
+      ]
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isolation": {
+          "enum": [
+            "subagent",
+            "session",
+            "unknown"
+          ],
+          "default": "subagent"
+        },
+        "parallel_tasks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dir",
+        "formats"
+      ],
+      "properties": {
+        "dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "md",
+              "json",
+              "html"
+            ]
+          }
+        },
+        "compat_path": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_input_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_wall_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_paper_tokens": {
+          "type": "integer",
+          "minimum": 1000
+        },
+        "max_output_tokens_per_call": {
+          "type": "integer",
+          "minimum": 256
+        },
+        "max_prior_tokens": {
+          "type": "integer",
+          "minimum": 500
+        },
+        "max_digest_tokens": {
+          "type": "integer",
+          "minimum": 200
+        },
+        "include_digest": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_references": {
+          "type": "boolean",
+          "default": false
+        },
+        "allow_truncation": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "strict_evidence": {
+          "type": "boolean",
+          "default": true
+        },
+        "anonymize": {
+          "type": "boolean",
+          "default": true
+        },
+        "early_stop": {
+          "type": "boolean",
+          "default": true
+        },
+        "blind_paper": {
+          "type": "boolean",
+          "default": false
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "prompt_set": {
+          "type": "string",
+          "default": "2.1.0"
+        }
+      }
+    },
+    "purpose": {
+      "enum": [
+        "review",
+        "problem_finding",
+        "summary"
+      ],
+      "default": "review"
+    },
+    "material": {
+      "enum": [
+        "paper",
+        "proposal",
+        "design"
+      ],
+      "default": "paper"
+    },
+    "domain": {
+      "type": "string",
+      "default": "ai-ict"
+    },
+    "backends": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "llm_config": {
+      "type": "string"
+    },
+    "agent_backend": {
+      "type": ["string", "null"],
+      "description": "Model the host agent is using; defaults are inherited from it"
+    },
+    "allow_backend_mismatch": {
+      "type": "boolean",
+      "default": false
+    },
+    "vision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["off", "auto", "all"] },
+        "max_pages": { "type": "integer", "minimum": 1, "maximum": 200 },
+        "dpi": { "type": "integer", "minimum": 72, "maximum": 300 }
+      }
+    }
+  }
+}

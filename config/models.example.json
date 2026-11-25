@@ -1,0 +1,111 @@
+{
+  "schema_version": "hpe/v2",
+  "note": "Example model registry. Copy to config/models.json and update prices/context windows from the provider documentation. Never store API keys here. If config/models.json is absent, the CLI uses a conservative built-in DeepSeek entry.",
+  "default_provider": "deepseek",
+  "providers": {
+    "deepseek": {
+      "type": "openai_compatible",
+      "base_url": "https://api.deepseek.com/v1",
+      "api_key_env": "DEEPSEEK_API_KEY",
+      "default_model": "deepseek-chat",
+      "models": {
+        "deepseek-chat": {
+          "context_window": 128000,
+          "max_output_tokens": 8192,
+          "json_mode": true,
+          "price_per_mtok": {
+            "input": 0.28,
+            "output": 0.42
+          }
+        },
+        "deepseek-reasoner": {
+          "context_window": 128000,
+          "max_output_tokens": 32768,
+          "json_mode": true,
+          "reasoning_effort": "high",
+          "price_per_mtok": {
+            "input": 0.55,
+            "output": 2.19
+          }
+        }
+      }
+    },
+    "qianwen": {
+      "type": "openai_compatible",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "api_key_env": "QIANWEN_API_KEY",
+      "default_model": "qwen-max",
+      "models": {
+        "qwen-max": {
+          "context_window": 131072,
+          "max_output_tokens": 8192,
+          "json_mode": true,
+          "price_per_mtok": {
+            "input": 0.0,
+            "output": 0.0
+          }
+        }
+      }
+    },
+    "glm": {
+      "type": "openai_compatible",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "api_key_env": "GLM_API_KEY",
+      "default_model": "glm-4-plus",
+      "models": {
+        "glm-4-plus": {
+          "context_window": 128000,
+          "max_output_tokens": 8192,
+          "json_mode": true,
+          "price_per_mtok": {
+            "input": 0.0,
+            "output": 0.0
+          }
+        }
+      }
+    },
+    "local": {
+      "type": "openai_compatible",
+      "base_url": "http://127.0.0.1:8000/v1",
+      "api_key_env": null,
+      "default_model": "local-model",
+      "models": {
+        "local-model": {
+          "context_window": 32768,
+          "max_output_tokens": 4096,
+          "json_mode": false,
+          "price_per_mtok": {
+            "input": 0.0,
+            "output": 0.0
+          }
+        }
+      }
+    },
+    "kimi": {
+      "type": "openai_compatible",
+      "base_url": "https://api.moonshot.cn/v1",
+      "api_key_env": "MOONSHOT_API_KEY",
+      "default_model": "kimi-k2-0905-preview",
+      "models": {
+        "kimi-k2-0905-preview": {
+          "context_window": 131072,
+          "max_output_tokens": 8192,
+          "json_mode": true,
+          "price_per_mtok": {
+            "input": 0.0,
+            "output": 0.0
+          }
+        },
+        "moonshot-v1-128k": {
+          "context_window": 128000,
+          "max_output_tokens": 8192,
+          "json_mode": true,
+          "price_per_mtok": {
+            "input": 0.0,
+            "output": 0.0
+          }
+        }
+      }
+    }
+  }
+}

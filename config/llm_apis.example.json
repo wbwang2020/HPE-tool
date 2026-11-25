@@ -1,0 +1,54 @@
+{
+  "schema_version": "hpe/llm-apis/v1",
+  "default_backend": "host",
+  "note": "Copy to config/llm_apis.json or ~/.hpe-paper-evaluator/llm_apis.json, chmod 600, fill only the providers you use. Never commit real keys. API-mode role defaults inherit the detected host-agent model; same-vendor/different-model defaults are refused unless --allow-backend-mismatch.",
+  "providers": {
+    "deepseek": {
+      "base_url": "https://api.deepseek.com/v1",
+      "api_key": "",
+      "api_key_env": "DEEPSEEK_API_KEY",
+      "default_model": "deepseek-chat",
+      "models": {
+        "deepseek-chat": {"context_window": 128000, "max_output_tokens": 8192, "json_mode": true, "price_per_mtok": {"input": 0.28, "output": 0.42}},
+        "deepseek-reasoner": {"context_window": 128000, "max_output_tokens": 32768, "json_mode": true, "reasoning_effort": "high", "price_per_mtok": {"input": 0.55, "output": 2.19}}
+      }
+    },
+    "qwen": {
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "api_key": "",
+      "api_key_env": "QIANWEN_API_KEY",
+      "default_model": "qwen3-max",
+      "models": {
+        "qwen3-max": {"context_window": 131072, "max_output_tokens": 8192, "json_mode": true},
+        "qwen-max": {"context_window": 131072, "max_output_tokens": 8192, "json_mode": true}
+      }
+    },
+    "glm": {
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "api_key": "",
+      "api_key_env": "GLM_API_KEY",
+      "default_model": "glm-4-plus",
+      "models": {
+        "glm-4-plus": {"context_window": 128000, "max_output_tokens": 8192, "json_mode": true},
+        "glm-5.2": {"context_window": 1000000, "max_output_tokens": 131072, "json_mode": true}
+      }
+    },
+    "kimi": {
+      "base_url": "https://api.moonshot.cn/v1",
+      "api_key": "",
+      "api_key_env": "MOONSHOT_API_KEY",
+      "default_model": "kimi-k2-0905-preview",
+      "models": {
+        "kimi-k2-0905-preview": {"context_window": 131072, "max_output_tokens": 8192, "json_mode": true},
+        "kimi-k2-turbo-preview": {"context_window": 131072, "max_output_tokens": 8192, "json_mode": true},
+        "moonshot-v1-128k": {"context_window": 128000, "max_output_tokens": 8192, "json_mode": true}
+      }
+    }
+  },
+  "roles": {
+    "reviewers": ["host", "host", "host"],
+    "author": "host",
+    "digest": "host",
+    "meta": "host"
+  }
+}

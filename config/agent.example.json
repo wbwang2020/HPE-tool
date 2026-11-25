@@ -1,0 +1,6 @@
+{
+  "note": "Optional host-agent identity. Copy to ~/.hpe-paper-evaluator/agent.json. This file contains no API key; it only tells the skill which model the host agent is using.",
+  "provider": "deepseek",
+  "model": "deepseek-v4.1-flash",
+  "kind": "api"
+}

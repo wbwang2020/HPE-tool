@@ -1,0 +1,27 @@
+{
+  "schema_version": "hpe/domains/v1",
+  "default": "ai-ict",
+  "domains": {
+    "ai-ict": {
+      "label": "AI / CS / ICT",
+      "prompt": "prompts/domains/ai-ict.md",
+      "default_reviewers": ["methodology", "experiments", "novelty"],
+      "profiles": ["conference", "journal", "paper", "proposal", "experiment"],
+      "keywords": ["deep learning", "machine learning", "neural", "llm", "transformer", "reinforcement learning", "computer vision", "nlp", "dataset", "benchmark", "algorithm", "人工智能", "机器学习", "大模型", "计算机", "通信", "网络", "芯片"]
+    },
+    "materials": {
+      "label": "金属材料 / 高熵合金",
+      "prompt": "prompts/domains/materials-metal-hea.md",
+      "default_reviewers": ["methodology", "experiments", "reproducibility"],
+      "profiles": ["journal", "proposal", "experiment", "paper"],
+      "keywords": ["alloy", "high-entropy", "high entropy", "hea", "metal", "steel", "titanium", "aluminum", "microstructure", "phase", "xrd", "sem", "tem", "ebsd", "tensile", "hardness", "corrosion", "fatigue", "thermodynamic", "高熵合金", "合金", "金属", "钢", "钛", "铝", "显微组织", "相", "拉伸", "硬度", "腐蚀", "疲劳"]
+    },
+    "mechanical": {
+      "label": "机械工程",
+      "prompt": "prompts/domains/mechanical.md",
+      "default_reviewers": ["methodology", "experiments", "reproducibility"],
+      "profiles": ["journal", "proposal", "experiment", "paper"],
+      "keywords": ["mechanical", "structural", "fatigue", "fracture", "fea", "finite element", "vibration", "tribology", "manufacturing", "machining", "tolerance", "load", "stress", "strain", "机械", "结构", "疲劳", "断裂", "有限元", "振动", "摩擦", "制造", "加工", "公差", "载荷", "应力", "应变"]
+    }
+  }
+}

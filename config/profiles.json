@@ -1,0 +1,79 @@
+{
+  "schema_version": "hpe/v2",
+  "profiles": {
+    "paper": {
+      "description": "Generic paper, quick review",
+      "weights": {
+        "novelty": 0.2,
+        "technical_soundness": 0.2,
+        "evidence_strength": 0.2,
+        "reproducibility": 0.1,
+        "clarity": 0.1,
+        "significance": 0.2
+      },
+      "default_reviewers": ["methodology", "experiments"],
+      "default_rounds": 0
+    },
+    "conference": {
+      "description": "CS/AI conference paper",
+      "weights": {
+        "novelty": 0.2,
+        "technical_soundness": 0.25,
+        "evidence_strength": 0.25,
+        "reproducibility": 0.15,
+        "clarity": 0.05,
+        "significance": 0.1
+      },
+      "default_reviewers": ["methodology", "experiments", "novelty"],
+      "default_rounds": 2
+    },
+    "journal": {
+      "description": "Journal paper; completeness and impact",
+      "weights": {
+        "novelty": 0.25,
+        "technical_soundness": 0.25,
+        "evidence_strength": 0.2,
+        "reproducibility": 0.1,
+        "clarity": 0.05,
+        "significance": 0.15
+      },
+      "default_reviewers": ["methodology", "experiments", "novelty", "reproducibility"],
+      "default_rounds": 2
+    },
+    "proposal": {
+      "description": "Research proposal / thesis plan",
+      "weights": {
+        "novelty": 0.15,
+        "technical_soundness": 0.25,
+        "evidence_strength": 0.15,
+        "reproducibility": 0.1,
+        "clarity": 0.1,
+        "significance": 0.25
+      },
+      "default_reviewers": ["methodology", "novelty", "practitioner"],
+      "default_rounds": 1
+    },
+    "experiment": {
+      "description": "Experimental design / protocol",
+      "weights": {
+        "novelty": 0.1,
+        "technical_soundness": 0.3,
+        "evidence_strength": 0.3,
+        "reproducibility": 0.15,
+        "clarity": 0.05,
+        "significance": 0.1
+      },
+      "default_reviewers": ["experiments", "reproducibility", "devils_advocate"],
+      "default_rounds": 1
+    }
+  },
+  "decision_policy": {
+    "blocking_open": { "threshold": 1, "decision": "reject" },
+    "major_open_gte": { "threshold": 1, "decision": "major_revision" },
+    "minor_open_gte": { "threshold": 3, "decision": "minor_revision" },
+    "default": "accept",
+    "override_allowed": true,
+    "min_override_confidence": 0.7,
+    "single_reviewer_blocking_needs_meta": true
+  }
+}

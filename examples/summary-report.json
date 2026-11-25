@@ -1,0 +1,30 @@
+{
+  "schema_version": "hpe/v2",
+  "paper_id": "sha256:example",
+  "purpose": "summary",
+  "material": "paper",
+  "domain": "ai-ict",
+  "title": "Example Paper",
+  "summary_markdown": "## 1. Basic information\n\nExample summary.\n\n## 2. Problem\n\nA problem.\n\n## 3. Hypotheses\n\nA hypothesis.\n\n## 4. Research design\n\nA design discussion long enough for the schema fixture.\n\n## 5. Data and reproducibility\n\nData.\n\n## 6. Methods\n\nMethods.\n\n## 7. Procedure\n\nProcedure.\n\n## 8. Analysis\n\nAnalysis.\n\n## 9. Findings\n\nFindings.\n\n## 10. Results\n\nResults.\n\n## 11. Supporting results\n\nSupporting.\n\n## 12. Conclusions\n\nConclusions.\n\n## 13. Reviewer view\n\nReview.\n\n## 14. Relation to prior work\n\nPrior.\n\n## 15. Highlights and weaknesses\n\nHighlights.\n\n## 16. Figures and tables\n\nNone.\n\n## 17. Evaluation\n\nEvaluation.\n\n## 18. Questions\n\nQuestions.\n\n## 19. Implications\n\nImplications.\n\n## 20. References\n\nReferences.",
+  "highlights": [
+    {
+      "id": "H1",
+      "kind": "technical",
+      "claim": "The example mechanism is testable.",
+      "evidence": [
+        {
+          "kind": "paper",
+          "page": 1,
+          "section": "Abstract",
+          "quote": "Example evidence."
+        }
+      ],
+      "why_it_matters": "It isolates a mechanism."
+    }
+  ],
+  "open_questions": ["What is missing?"],
+  "missing_information": ["Variance."],
+  "limitations": ["Fixture only."],
+  "confidence": 0.7,
+  "prompt_version": "3.1.0"
+}
